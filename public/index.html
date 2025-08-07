@@ -19,19 +19,43 @@
         <label for="category-select">Kategori Seçin:</label>
         <select id="category-select" name="category" required>
             <option value="">-- Lütfen bir kategori seçin --</option>
-            <!-- ADD YOUR OPTIONS (CATEGORIES) HERE -->
+                    <!-- KATEGORILERI BURAYA EKLE-->
         </select>
-        <input type="file" name="excelFile" id="excelFile" accept=".xlsx" required>
+        <button type="button" id="fillFormButton" disabled>Form Doldur</button>
+
+        <label>Excel Dosyası:</label>
+        <div class="file-input-container">
+            <input type="file" name="excelFile" id="excelFile" accept=".xlsx" required>
+            <button type="button" class="clear-file-button" id="clearFileButton" style="display: none;">&times;</button>
+        </div>
+
         <button type="submit">Çevir ve Kaydet</button>
     </form>
 
     <div id="loading">Dönüştürülüyor...</div>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="form-info" style="color: #FFC107; text-align: center; font-style: italic;"></p>
+            <form id="dynamicForm">
+            </form>
+        </div>
+    </div>
 
     <script>
         const form = document.getElementById('uploadForm');
         const loadingDiv = document.getElementById('loading');
         const categoryLinksDiv = document.getElementById('categoryLinks');
         const categorySelect = document.getElementById('category-select');
+        const fillFormButton = document.getElementById('fillFormButton');
+        const formModal = document.getElementById('formModal');
+        const closeButton = document.querySelector('.close-button');
+        const dynamicForm = document.getElementById('dynamicForm');
+        const formInfo = document.getElementById('form-info');
+        const excelFile = document.getElementById('excelFile');
+        const clearFileButton = document.getElementById('clearFileButton');
 
         // Sayfadaki select elementinden kategori listesini alıp sunucuya gönderen fonksiyon
         async function updateServerCategories() {
@@ -108,6 +132,193 @@
             } finally {
                 loadingDiv.style.display = 'none';
             }
+        });
+
+        categorySelect.addEventListener('change', (e) => {
+            const selectedCategory = e.target.value;
+            if (selectedCategory) {
+                fillFormButton.disabled = false;
+            } else {
+                fillFormButton.disabled = true;
+            }
+        });
+
+        fillFormButton.addEventListener('click', async () => {
+            const category = categorySelect.value;
+            if (!category) {
+                alert('Lütfen önce bir kategori seçin.');
+                return;
+            }
+
+            const modalTitle = document.getElementById('modal-title');
+            modalTitle.textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Kategorisi için Veri Girişi`;
+            dynamicForm.innerHTML = ''; // Önceki formu temizle
+            formInfo.textContent = 'Yeni veri eklemek için alanları doldurun.'; // Bilgi metnini güncelle
+
+            const updateSubmitButtonState = () => {
+                const newFields = dynamicForm.querySelectorAll('.new-form-field');
+                const submitButton = dynamicForm.querySelector('button[type="submit"]');
+
+                if (newFields.length === 0) {
+                    submitButton.disabled = true;
+                    return;
+                }
+
+                let allFilled = true;
+                newFields.forEach(field => {
+                    const headerInput = field.querySelector('input[name="newHeader"]');
+                    const valueInput = field.querySelector('input[name="newValue"]');
+                    if (!headerInput.value.trim() || !valueInput.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+
+                submitButton.disabled = !allFilled;
+            };
+
+            const formFieldsContainer = document.createElement('div');
+            formFieldsContainer.id = 'formFieldsContainer';
+            dynamicForm.appendChild(formFieldsContainer);
+
+            const addNewFieldButton = document.createElement('button');
+            addNewFieldButton.type = 'button';
+            addNewFieldButton.textContent = 'Yeni Alan Ekle';
+            addNewFieldButton.classList.add('add-new-field-button');
+            dynamicForm.appendChild(addNewFieldButton);
+
+            addNewFieldButton.addEventListener('click', () => {
+                const newFieldDiv = document.createElement('div');
+                newFieldDiv.classList.add('new-form-field');
+
+                const headerInput = document.createElement('input');
+                headerInput.type = 'text';
+                headerInput.name = 'newHeader';
+                headerInput.placeholder = 'Başlık';
+                headerInput.required = true;
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.name = 'newValue';
+                valueInput.placeholder = 'Değer';
+                valueInput.required = true;
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.textContent = 'Sil';
+                removeButton.classList.add('remove-field-button');
+                removeButton.onclick = function () {
+                    this.parentElement.remove();
+                    updateSubmitButtonState();
+                };
+
+                newFieldDiv.appendChild(headerInput);
+                newFieldDiv.appendChild(valueInput);
+                newFieldDiv.appendChild(removeButton);
+
+                formFieldsContainer.appendChild(newFieldDiv);
+                updateSubmitButtonState();
+            });
+
+            // Başlangıçta bir alan ekle
+            addNewFieldButton.click();
+
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.textContent = 'Yükle';
+            submitButton.disabled = true;
+            dynamicForm.appendChild(submitButton);
+
+            dynamicForm.addEventListener('input', updateSubmitButtonState);
+
+            formModal.style.display = 'flex';
+            updateSubmitButtonState();
+        });
+
+        closeButton.addEventListener('click', () => {
+            formModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === formModal) {
+                formModal.style.display = 'none';
+            }
+        });
+
+        dynamicForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const category = categorySelect.value;
+            const formData = {};
+
+            const formFieldsContainer = dynamicForm.querySelector('#formFieldsContainer');
+            if (!formFieldsContainer) {
+                alert('Form alanı bulunamadı.');
+                return;
+            }
+
+            const newFields = formFieldsContainer.querySelectorAll('.new-form-field');
+            if (newFields.length === 0) {
+                alert('Lütfen en az bir alan ekleyin.');
+                return;
+            }
+
+            let allFilled = true;
+            newFields.forEach(field => {
+                const headerInput = field.querySelector('input[name="newHeader"]');
+                const valueInput = field.querySelector('input[name="newValue"]');
+                const header = headerInput.value.trim();
+                const value = valueInput.value.trim();
+
+                if (!header || !value) {
+                    allFilled = false;
+                }
+                formData[header] = value;
+            });
+
+            if (!allFilled) {
+                alert('Lütfen tüm başlık ve değer alanlarını doldurun.');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/add-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category, formData })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                formModal.style.display = 'none';
+                dynamicForm.reset();
+                window.location.reload();
+            } catch (error) {
+                alert(`Hata: ${error.message}`);
+                console.error(error);
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        // Dosya seçildiğinde kaldırma butonunu göster
+        excelFile.addEventListener('change', () => {
+            if (excelFile.files.length > 0) {
+                clearFileButton.style.display = 'inline-block';
+            } else {
+                clearFileButton.style.display = 'none';
+            }
+        });
+
+        // Kaldırma butonuna tıklandığında dosyayı temizle
+        clearFileButton.addEventListener('click', () => {
+            excelFile.value = '';
+            clearFileButton.style.display = 'none';
         });
 
         // Sayfa yüklendiğinde, önce sunucuyu güncelle, sonra linkleri oluştur
