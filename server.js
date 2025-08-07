@@ -225,7 +225,7 @@ app.get('/:category', (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    res.status(404).send("404 Not Found: Aradığınız sayfa bulunamadı.");
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 const server = app.listen(port, () => {
