@@ -1,35 +1,32 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
     <title>Excel to JSON Converter</title>
 </head>
+
 <body>
     <h1>Excel'den JSON'a Çevirici</h1>
     <p>Lütfen XLSX formatında bir dosya yükleyiniz.</p>
 
     <div id="categoryLinks">
-        </div>
+    </div>
 
     <form id="uploadForm">
         <label for="category-select">Kategori Seçin:</label>
         <select id="category-select" name="category" required>
             <option value="">-- Lütfen bir kategori seçin --</option>
-            <option value="etkinlikler">Etkinlikler</option>
-            <option value="burslar">Burslar</option>
-            <option value="yeniKonu">Yeni Konu</option>
-            <option value="texts">Texts</option>
-            <option value="scriptoto">Scriptoto</option>
-            <option value="yeniKategori">Yeni Kategori</option>
+            <!-- ADD YOUR OPTIONS (CATEGORIES) HERE -->
         </select>
         <input type="file" name="excelFile" id="excelFile" accept=".xlsx" required>
         <button type="submit">Çevir ve Kaydet</button>
     </form>
 
     <div id="loading">Dönüştürülüyor...</div>
-    
+
     <script>
         const form = document.getElementById('uploadForm');
         const loadingDiv = document.getElementById('loading');
@@ -42,7 +39,7 @@
             for (let i = 1; i < categorySelect.options.length; i++) {
                 categories.push(categorySelect.options[i].value);
             }
-            
+
             try {
                 const response = await fetch('/api/update-categories', {
                     method: 'POST',
@@ -102,9 +99,9 @@
                     throw new Error(errorText);
                 }
 
-                await response.json(); 
+                await response.json();
                 alert(`Veriler başarıyla ${categoryValue} kategorisine eklendi.`);
-                
+
             } catch (error) {
                 alert(`Hata: ${error.message}`);
                 console.error(error);
@@ -120,4 +117,5 @@
         });
     </script>
 </body>
+
 </html>
