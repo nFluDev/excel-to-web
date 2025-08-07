@@ -1,0 +1,176 @@
+/* Genel Stil */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+    --primary-color: #121212; /* Çok Koyu Siyah */
+    --secondary-color: #1E1E1E; /* Koyu Gri */
+    --accent-color-1: #00ADB5; /* Turkuaz */
+    --accent-color-2: #30E3CA; /* Daha Açık Turkuaz */
+    --text-color: #EEEEEE; /* Açık Gri */
+    --border-color: #444444; /* Orta Gri */
+    --background-gradient: radial-gradient(circle at center, var(--secondary-color) 0%, var(--primary-color) 100%);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--background-gradient);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%23121212" /><path d="M0 0h100v100H0V0zm20 20h60v60H20V20z" fill="%231e1e1e" fill-opacity="0.3" /></svg>');
+    background-size: 50px 50px;
+    opacity: 0.5;
+    z-index: -1;
+    animation: background-move 60s linear infinite;
+}
+
+@keyframes background-move {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(100px, 100px);
+    }
+}
+
+/* Ana Sayfaya Dön Linki */
+.back-link {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    text-decoration: none;
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-link:hover {
+    background-color: var(--accent-color-1);
+    color: var(--primary-color);
+    border-color: var(--accent-color-1);
+    box-shadow: 0 0 10px var(--accent-color-1);
+}
+
+/* Başlık */
+h1#data-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    text-align: center;
+    color: var(--accent-color-1);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    position: relative;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px rgba(0, 173, 181, 0.7);
+    max-width: 800px;
+    width: 100%;
+}
+
+h1#data-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--accent-color-1), transparent);
+}
+
+/* Veri Konteyneri */
+#result-container {
+    width: 100%;
+    max-width: 800px;
+    background: var(--secondary-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Veri Satırı */
+.data-row {
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-row:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border-color: var(--accent-color-2);
+}
+
+.data-row h4 {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent-color-2);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.data-row p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.data-row strong {
+    color: var(--accent-color-1);
+    margin-right: 0.5rem;
+}
+
+/* Küçük Ekranlar için Responsive Tasarım */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+    .back-link {
+        top: 1rem;
+        left: 1rem;
+    }
+    h1#data-title {
+        font-size: 2rem;
+        margin-top: 3rem; /* Linkin üzerine gelmesini engellemek için */
+    }
+    #result-container {
+        padding: 1rem;
+    }
+    .data-row {
+        padding: 1rem;
+    }
+    .data-row h4 {
+        font-size: 1.2rem;
+    }
+    .data-row p {
+        font-size: 0.9rem;
+    }
+}
