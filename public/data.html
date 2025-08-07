@@ -1,24 +1,58 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="data.css">
     <title>Veri Görüntüleme</title>
 </head>
+
 <body>
-    <a href="/" class="back-link">Ana Sayfaya Dön</a>
+    <a href="/" class="back-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg></a>
     <h1 id="data-title"></h1>
+    <div class="controls-container">
+        <div id="data-stats"></div>
+        <input type="text" id="search-box" placeholder="Verilerde ara...">
+    </div>
     <div id="result-container">Veriler yükleniyor...</div>
 
     <script>
         const resultContainer = document.getElementById('result-container');
         const dataTitle = document.getElementById('data-title');
-        
+        const dataStats = document.getElementById('data-stats');
+        const searchBox = document.getElementById('search-box');
+        let allDataRows = [];
+
+        function renderData(dataToRender) {
+            if (dataToRender.length === 0) {
+                resultContainer.innerHTML = 'Aradığınız kriterlere uygun veri bulunamadı.';
+                return;
+            }
+
+            let htmlContent = '';
+            dataToRender.forEach((row, rowIndex) => {
+                const displayIndex = allDataRows.indexOf(row) + 1;
+                htmlContent += `<div class="data-row"><h4>Satır ${displayIndex}</h4>`;
+                for (const key in row) {
+                    if (Object.hasOwnProperty.call(row, key)) {
+                        // Değerleri küçük harfe dönüştürüp arama için sakla
+                        htmlContent += `<p><strong>${key}:</strong> ${row[key]}</p>`;
+                    }
+                }
+                htmlContent += `</div>`;
+            });
+
+            resultContainer.innerHTML = htmlContent;
+        }
+
         async function fetchAndRenderData() {
-            // URL'den kategori adını al (örn: /etkinlikler -> etkinlikler)
             const category = window.location.pathname.split('/').pop();
-            
+
             if (!category) {
                 resultContainer.innerHTML = 'Geçersiz kategori.';
                 dataTitle.textContent = 'Hata';
@@ -33,33 +67,42 @@
                 if (!response.ok) {
                     throw new Error('Veriler listelenemedi.');
                 }
-                const allDataRows = await response.json();
-                
+                allDataRows = await response.json();
+
                 if (allDataRows.length === 0) {
                     resultContainer.innerHTML = `${category} kategorisinde veri bulunamadı.`;
+                    dataStats.textContent = 'Toplam satır: 0';
                     return;
                 }
-                
-                let htmlContent = '';
-                allDataRows.forEach((row, rowIndex) => {
-                    htmlContent += `<div class="data-row"><h4>Satır ${rowIndex + 1}</h4>`;
-                    for (const key in row) {
-                        if (Object.hasOwnProperty.call(row, key)) {
-                            htmlContent += `<p><strong>${key}:</strong> ${row[key]}</p>`;
-                        }
-                    }
-                    htmlContent += `</div>`;
-                });
-                
-                resultContainer.innerHTML = htmlContent;
+
+                dataStats.textContent = `Toplam satır: ${allDataRows.length}`;
+                renderData(allDataRows);
 
             } catch (error) {
                 resultContainer.innerHTML = `Hata: ${error.message}`;
+                dataStats.textContent = 'Toplam satır: 0';
                 console.error(error);
             }
         }
 
+        searchBox.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            if (searchTerm === '') {
+                renderData(allDataRows);
+                dataStats.textContent = `Toplam satır: ${allDataRows.length}`;
+            } else {
+                const filteredData = allDataRows.filter(row =>
+                    Object.values(row).some(value =>
+                        String(value).toLowerCase().includes(searchTerm)
+                    )
+                );
+                renderData(filteredData);
+                dataStats.textContent = `Toplam satır: ${allDataRows.length} | Filtrelenen: ${filteredData.length}`;
+            }
+        });
+
         window.addEventListener('load', fetchAndRenderData);
     </script>
 </body>
+
 </html>

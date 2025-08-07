@@ -1,13 +1,12 @@
-/* Genel Stil */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --primary-color: #121212; /* Çok Koyu Siyah */
-    --secondary-color: #1E1E1E; /* Koyu Gri */
-    --accent-color-1: #00ADB5; /* Turkuaz */
-    --accent-color-2: #30E3CA; /* Daha Açık Turkuaz */
-    --text-color: #EEEEEE; /* Açık Gri */
-    --border-color: #444444; /* Orta Gri */
+    --primary-color: #121212;
+    --secondary-color: #1E1E1E;
+    --accent-color-1: #749BC2;
+    --accent-color-2: #fff;
+    --text-color: #EEEEEE;
+    --border-color: #57564F;
     --background-gradient: radial-gradient(circle at center, var(--secondary-color) 0%, var(--primary-color) 100%);
 }
 
@@ -23,7 +22,7 @@ body {
     align-items: center;
     padding: 2rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body::before {
@@ -51,7 +50,7 @@ body::before {
 
 /* Ana Sayfaya Dön Linki */
 .back-link {
-    position: absolute;
+    position: fixed;
     top: 2rem;
     left: 2rem;
     text-decoration: none;
@@ -84,7 +83,7 @@ h1#data-title {
     padding-bottom: 0.5rem;
     margin-bottom: 2rem;
     text-shadow: 0 0 10px rgba(0, 173, 181, 0.7);
-    max-width: 800px;
+    max-width: 90vw;
     width: 100%;
 }
 
@@ -99,28 +98,84 @@ h1#data-title::after {
     background: linear-gradient(to right, transparent, var(--accent-color-1), transparent);
 }
 
-/* Veri Konteyneri */
+/* Kontroller Konteyneri ve Veri Konteyneri ortak stilleri */
+.controls-container,
 #result-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 90vw;
     background: var(--secondary-color);
-    border-radius: 10px;
     border: 1px solid var(--border-color);
+    border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
     margin-top: 1rem;
 }
 
-/* Veri Satırı */
+/* Kontroller Konteyneri */
+.controls-container {
+    max-width: 600px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    transition: max-width 0.5s ease;
+}
+
+/* Veri Sayacı */
+#data-stats {
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    color: var(--accent-color-2);
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Arama Kutusu */
+#search-box {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    min-width: 150px;
+    transition: all 0.3s ease;
+}
+
+#search-box::placeholder {
+    color: #888888;
+}
+
+#search-box:focus {
+    outline: none;
+    border-color: var(--accent-color-1);
+    box-shadow: 0 0 8px rgba(0, 173, 181, 0.5);
+    min-width: 250px;
+}
+
+/* Veri Konteyneri (Kartların bulunduğu alan) */
+#result-container {
+    padding: 2rem;
+    padding-bottom: 5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 4.5rem 1.5rem;
+}
+
+/* Veri Satırı (Kart) */
 .data-row {
     padding: 1.5rem;
     border-radius: 8px;
     background-color: var(--primary-color);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
 }
 
 .data-row:hover {
@@ -148,20 +203,41 @@ h1#data-title::after {
     margin-right: 0.5rem;
 }
 
-/* Küçük Ekranlar için Responsive Tasarım */
-@media (max-width: 600px) {
+/* Responsive Tasarım */
+@media (max-width: 500px) {
     body {
         padding: 1rem;
     }
     .back-link {
-        top: 1rem;
-        left: 1rem;
+        position: static;
+        margin-bottom: 1rem;
     }
     h1#data-title {
         font-size: 2rem;
-        margin-top: 3rem; /* Linkin üzerine gelmesini engellemek için */
+        margin-top: 1rem;
+    }
+    .controls-container {
+        flex-direction: row; 
+        max-width: 90vw;
+        padding: 1rem;
+    }
+    #data-stats {
+        text-align: center;
+        margin-bottom: 0;
+        flex-shrink: 1; 
+        padding: 0.5rem;
+    }
+    #search-box {
+        min-width: 50px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0.5rem;
+    }
+    #search-box:focus {
+        min-width: 100px;
     }
     #result-container {
+        grid-template-columns: 1fr;
         padding: 1rem;
     }
     .data-row {
@@ -172,5 +248,12 @@ h1#data-title::after {
     }
     .data-row p {
         font-size: 0.9rem;
+    }
+}
+
+/* Geniş ekranlar için özel grid ayarı, diğer mobil ayarların üzerine yazılır */
+@media (min-width: 401px) {
+    #result-container {
+        grid-template-columns: repeat(auto-fill, minmax(388px, 1fr));
     }
 }

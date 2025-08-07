@@ -1,13 +1,12 @@
-/* Genel Stil */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --primary-color: #121212; /* Çok Koyu Siyah */
-    --secondary-color: #1E1E1E; /* Koyu Gri */
-    --accent-color-1: #00ADB5; /* Turkuaz */
-    --accent-color-2: #30E3CA; /* Daha Açık Turkuaz */
-    --text-color: #EEEEEE; /* Açık Gri */
-    --border-color: #444444; /* Orta Gri */
+    --primary-color: #121212;
+    --secondary-color: #1E1E1E;
+    --accent-color-1: #749BC2;
+    --accent-color-2: #fff;
+    --text-color: #EEEEEE;
+    --border-color: #57564F;
     --background-gradient: radial-gradient(circle at center, var(--secondary-color) 0%, var(--primary-color) 100%);
 }
 
@@ -45,6 +44,7 @@ body::before {
     from {
         transform: translate(0, 0);
     }
+
     to {
         transform: translate(100px, 100px);
     }
@@ -125,9 +125,11 @@ p {
 }
 
 #categoryLinks a:hover {
-    color: var(--accent-color-2); /* Hover'da daha açık turkuaz renk */
+    color: var(--accent-color-2);
+    /* Hover'da daha açık turkuaz renk */
     border-color: var(--accent-color-1);
-    background-color: var(--secondary-color); /* Arka planı sabit tut */
+    background-color: var(--secondary-color);
+    /* Arka planı sabit tut */
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
@@ -153,7 +155,8 @@ label {
     color: var(--accent-color-1);
 }
 
-select, input[type="file"] {
+select,
+input[type="file"] {
     width: 100%;
     padding: 0.8rem;
     background-color: var(--primary-color);
@@ -168,7 +171,8 @@ select, input[type="file"] {
     transition: all 0.3s ease;
 }
 
-select:focus, input[type="file"]:focus {
+select:focus,
+input[type="file"]:focus {
     outline: none;
     border-color: var(--accent-color-1);
     box-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
@@ -235,6 +239,7 @@ button[type="submit"]:hover {
         opacity: 0.5;
         text-shadow: none;
     }
+
     to {
         opacity: 1;
         text-shadow: 0 0 5px var(--accent-color-1);
@@ -246,17 +251,21 @@ button[type="submit"]:hover {
     h1 {
         font-size: 2rem;
     }
+
     #uploadForm {
         padding: 1.5rem;
         gap: 1rem;
     }
+
     #categoryLinks {
         gap: 0.7rem;
     }
+
     #categoryLinks a {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
+
     button[type="submit"] {
         font-size: 1rem;
     }
