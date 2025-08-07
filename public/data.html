@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veri Görüntüleme</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; }
+        h1 { text-align: center; }
+        #result-container { margin-top: 2rem; }
+        .data-row { border: 1px solid #ccc; border-radius: 5px; padding: 0.5rem; margin-bottom: 1rem; background-color: #f9f9f9; }
+        .data-row h4 { margin-top: 0; padding-bottom: 0.25rem; }
+        .data-row p { margin: 0.25rem 0; }
+        .data-row p strong { display: inline-block; width: 250px; }
+        .back-link { display: block; text-align: center; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">Ana Sayfaya Dön</a>
+    <h1 id="data-title"></h1>
+    <div id="result-container">Veriler yükleniyor...</div>
+
+    <script>
+        const resultContainer = document.getElementById('result-container');
+        const dataTitle = document.getElementById('data-title');
+        
+        async function fetchAndRenderData() {
+            // URL'den kategori adını al (örn: /etkinlikler -> etkinlikler)
+            const category = window.location.pathname.split('/').pop();
+            
+            if (!category) {
+                resultContainer.innerHTML = 'Geçersiz kategori.';
+                dataTitle.textContent = 'Hata';
+                return;
+            }
+
+            resultContainer.innerHTML = 'Veriler yükleniyor...';
+            dataTitle.textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Verileri`;
+
+            try {
+                const response = await fetch(`/api/get-data/${category}`);
+                if (!response.ok) {
+                    throw new Error('Veriler listelenemedi.');
+                }
+                const allDataRows = await response.json();
+                
+                if (allDataRows.length === 0) {
+                    resultContainer.innerHTML = `${category} kategorisinde veri bulunamadı.`;
+                    return;
+                }
+                
+                let htmlContent = '';
+                allDataRows.forEach((row, rowIndex) => {
+                    htmlContent += `<div class="data-row"><h4>Satır ${rowIndex + 1}</h4>`;
+                    for (const key in row) {
+                        if (Object.hasOwnProperty.call(row, key)) {
+                            htmlContent += `<p><strong>${key}:</strong> ${row[key]}</p>`;
+                        }
+                    }
+                    htmlContent += `</div>`;
+                });
+                
+                resultContainer.innerHTML = htmlContent;
+
+            } catch (error) {
+                resultContainer.innerHTML = `Hata: ${error.message}`;
+                console.error(error);
+            }
+        }
+
+        window.addEventListener('load', fetchAndRenderData);
+    </script>
+</body>
+</html>

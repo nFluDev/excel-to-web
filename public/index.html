@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to JSON Converter</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; }
+        h1 { text-align: center; }
+        #uploadForm { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+        #uploadForm select, #uploadForm button { padding: 0.5rem; }
+        #loading { display: none; text-align: center; font-style: italic; color: #555; }
+        #categoryLinks { margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; }
+    </style>
+</head>
+<body>
+    <h1>Excel'den JSON'a Çevirici</h1>
+    <p>Lütfen XLSX formatında bir dosya yükleyiniz.</p>
+
+    <div id="categoryLinks">
+        </div>
+
+    <form id="uploadForm">
+        <label for="category-select">Kategori Seçin:</label>
+        <select id="category-select" name="category" required>
+            <option value="">-- Lütfen bir kategori seçin --</option>
+            <option value="etkinlikler">Etkinlikler</option>
+            <option value="burslar">Burslar</option>
+            <option value="yeniKonu">Yeni Konu</option>
+            <option value="texts">Texts</option>
+            <option value="scriptoto">Scriptoto</option>
+            <option value="yeniKategori">Yeni Kategori</option>
+        </select>
+        <input type="file" name="excelFile" id="excelFile" accept=".xlsx" required>
+        <button type="submit">Çevir ve Kaydet</button>
+    </form>
+
+    <div id="loading">Dönüştürülüyor...</div>
+    
+    <script>
+        const form = document.getElementById('uploadForm');
+        const loadingDiv = document.getElementById('loading');
+        const categoryLinksDiv = document.getElementById('categoryLinks');
+        const categorySelect = document.getElementById('category-select');
+
+        // Sayfadaki select elementinden kategori listesini alıp sunucuya gönderen fonksiyon
+        async function updateServerCategories() {
+            const categories = [];
+            for (let i = 1; i < categorySelect.options.length; i++) {
+                categories.push(categorySelect.options[i].value);
+            }
+            
+            try {
+                const response = await fetch('/api/update-categories', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ categories })
+                });
+                if (!response.ok) {
+                    throw new Error('Kategoriler sunucuda güncellenemedi.');
+                }
+                console.log('Kategoriler sunucuda başarıyla güncellendi.');
+            } catch (error) {
+                console.error('Kategoriler sunucuya gönderilirken hata:', error);
+            }
+        }
+
+        // Linkleri oluşturma fonksiyonu
+        function createCategoryLinks() {
+            const categories = [];
+            for (let i = 1; i < categorySelect.options.length; i++) {
+                categories.push(categorySelect.options[i].value);
+            }
+
+            categoryLinksDiv.innerHTML = '';
+            categories.forEach(category => {
+                const link = document.createElement('a');
+                link.href = `/${category}`;
+                link.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryLinksDiv.appendChild(link);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('excelFile');
+            const categoryValue = categorySelect.value;
+
+            if (!fileInput.files.length || !categoryValue) {
+                alert('Lütfen bir dosya ve kategori seçin.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('excelFile', fileInput.files[0]);
+            formData.append('category', categoryValue);
+
+            loadingDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+
+                await response.json(); 
+                alert(`Veriler başarıyla ${categoryValue} kategorisine eklendi.`);
+                
+            } catch (error) {
+                alert(`Hata: ${error.message}`);
+                console.error(error);
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        // Sayfa yüklendiğinde, önce sunucuyu güncelle, sonra linkleri oluştur
+        window.addEventListener('load', () => {
+            updateServerCategories();
+            createCategoryLinks();
+        });
+    </script>
+</body>
+</html>
