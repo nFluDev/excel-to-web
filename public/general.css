@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap');
+
+:root {
+    --primary-color: #20c997; /* Canlı Turkuaz */
+    --secondary-color: #fd7e14; /* Sıcak Mercan */
+    --text-color: #343a40; /* Koyu Gri */
+    --background-color: #f8f9fa; /* Çok Açık Gri */
+    --card-background: #ffffff;
+    --border-color: #e9ecef;
+    --hover-color: #f0f2f5;
+    --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #e0e7e9;
+        --background-color: #1a202c;
+        --card-background: #2d3748;
+        --border-color: #4a5568;
+        --hover-color: #3b4556;
+    }
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.7;
+    transition: background-color 0.4s, color 0.4s;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-color);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h1 {
+    color: var(--primary-color);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s, transform 0.2s;
+}
+
+a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: var(--card-background);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.4s;
+}
+
+.home-link, .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    background-color: var(--primary-color);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.home-link:hover, .back-link:hover {
+    background-color: var(--secondary-color);
+    box-shadow: 0 8px 20px rgba(253, 126, 20, 0.3);
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+.icon-dark, .icon-light {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+}

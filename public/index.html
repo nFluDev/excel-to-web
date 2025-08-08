@@ -19,8 +19,7 @@
         <label for="category-select">Kategori Seçin:</label>
         <select id="category-select" name="category" required>
             <option value="">-- Lütfen bir kategori seçin --</option>
-                    <!-- KATEGORILERI BURAYA EKLE-->
-        </select>
+                    </select>
         <button type="button" id="fillFormButton" disabled>Form Doldur</button>
 
         <label>Excel Dosyası:</label>
@@ -40,6 +39,11 @@
             <h2 id="modal-title"></h2>
             <p id="form-info" style="color: #FFC107; text-align: center; font-style: italic;"></p>
             <form id="dynamicForm">
+                <div class="form-fields-wrapper">
+                    <div id="formFieldsContainer"></div>
+                    <button type="button" id="addNewFieldButton" class="add-new-field-button">Yeni Alan Ekle</button>
+                </div>
+                <button type="submit" disabled>Yükle</button>
             </form>
         </div>
     </div>
@@ -56,6 +60,9 @@
         const formInfo = document.getElementById('form-info');
         const excelFile = document.getElementById('excelFile');
         const clearFileButton = document.getElementById('clearFileButton');
+        const formFieldsContainer = document.getElementById('formFieldsContainer');
+        const addNewFieldButton = document.getElementById('addNewFieldButton');
+        const modalSubmitButton = dynamicForm.querySelector('button[type="submit"]');
 
         // Sayfadaki select elementinden kategori listesini alıp sunucuya gönderen fonksiyon
         async function updateServerCategories() {
@@ -143,6 +150,27 @@
             }
         });
 
+        const updateSubmitButtonState = () => {
+            const newFields = formFieldsContainer.querySelectorAll('.new-form-field');
+            const submitButton = dynamicForm.querySelector('button[type="submit"]');
+
+            if (newFields.length === 0) {
+                submitButton.disabled = true;
+                return;
+            }
+
+            let allFilled = true;
+            newFields.forEach(field => {
+                const headerInput = field.querySelector('input[name="newHeader"]');
+                const valueInput = field.querySelector('input[name="newValue"]');
+                if (!headerInput.value.trim() || !valueInput.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            submitButton.disabled = !allFilled;
+        };
+
         fillFormButton.addEventListener('click', async () => {
             const category = categorySelect.value;
             if (!category) {
@@ -152,86 +180,11 @@
 
             const modalTitle = document.getElementById('modal-title');
             modalTitle.textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Kategorisi için Veri Girişi`;
-            dynamicForm.innerHTML = ''; // Önceki formu temizle
+            formFieldsContainer.innerHTML = ''; // Önceki formu temizle
             formInfo.textContent = 'Yeni veri eklemek için alanları doldurun.'; // Bilgi metnini güncelle
 
-            const updateSubmitButtonState = () => {
-                const newFields = dynamicForm.querySelectorAll('.new-form-field');
-                const submitButton = dynamicForm.querySelector('button[type="submit"]');
-
-                if (newFields.length === 0) {
-                    submitButton.disabled = true;
-                    return;
-                }
-
-                let allFilled = true;
-                newFields.forEach(field => {
-                    const headerInput = field.querySelector('input[name="newHeader"]');
-                    const valueInput = field.querySelector('input[name="newValue"]');
-                    if (!headerInput.value.trim() || !valueInput.value.trim()) {
-                        allFilled = false;
-                    }
-                });
-
-                submitButton.disabled = !allFilled;
-            };
-
-            const formFieldsContainer = document.createElement('div');
-            formFieldsContainer.id = 'formFieldsContainer';
-            dynamicForm.appendChild(formFieldsContainer);
-
-            const addNewFieldButton = document.createElement('button');
-            addNewFieldButton.type = 'button';
-            addNewFieldButton.textContent = 'Yeni Alan Ekle';
-            addNewFieldButton.classList.add('add-new-field-button');
-            dynamicForm.appendChild(addNewFieldButton);
-
-            addNewFieldButton.addEventListener('click', () => {
-                const newFieldDiv = document.createElement('div');
-                newFieldDiv.classList.add('new-form-field');
-
-                const headerInput = document.createElement('input');
-                headerInput.type = 'text';
-                headerInput.name = 'newHeader';
-                headerInput.placeholder = 'Başlık';
-                headerInput.required = true;
-
-                const valueInput = document.createElement('input');
-                valueInput.type = 'text';
-                valueInput.name = 'newValue';
-                valueInput.placeholder = 'Değer';
-                valueInput.required = true;
-
-                const removeButton = document.createElement('button');
-                removeButton.type = 'button';
-                removeButton.textContent = 'Sil';
-                removeButton.classList.add('remove-field-button');
-                removeButton.onclick = function () {
-                    this.parentElement.remove();
-                    updateSubmitButtonState();
-                };
-
-                newFieldDiv.appendChild(headerInput);
-                newFieldDiv.appendChild(valueInput);
-                newFieldDiv.appendChild(removeButton);
-
-                formFieldsContainer.appendChild(newFieldDiv);
-                updateSubmitButtonState();
-            });
-
-            // Başlangıçta bir alan ekle
             addNewFieldButton.click();
-
-            const submitButton = document.createElement('button');
-            submitButton.type = 'submit';
-            submitButton.textContent = 'Yükle';
-            submitButton.disabled = true;
-            dynamicForm.appendChild(submitButton);
-
-            dynamicForm.addEventListener('input', updateSubmitButtonState);
-
             formModal.style.display = 'flex';
-            updateSubmitButtonState();
         });
 
         closeButton.addEventListener('click', () => {
@@ -244,16 +197,45 @@
             }
         });
 
+        addNewFieldButton.addEventListener('click', () => {
+            const newFieldDiv = document.createElement('div');
+            newFieldDiv.classList.add('new-form-field');
+
+            const headerInput = document.createElement('input');
+            headerInput.type = 'text';
+            headerInput.name = 'newHeader';
+            headerInput.placeholder = 'Başlık';
+            headerInput.required = true;
+
+            const valueInput = document.createElement('input');
+            valueInput.type = 'text';
+            valueInput.name = 'newValue';
+            valueInput.placeholder = 'Değer';
+            valueInput.required = true;
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = 'Sil';
+            removeButton.classList.add('remove-field-button');
+            removeButton.onclick = function () {
+                this.parentElement.remove();
+                updateSubmitButtonState();
+            };
+
+            newFieldDiv.appendChild(headerInput);
+            newFieldDiv.appendChild(valueInput);
+            newFieldDiv.appendChild(removeButton);
+
+            formFieldsContainer.appendChild(newFieldDiv);
+            updateSubmitButtonState();
+        });
+
+        dynamicForm.addEventListener('input', updateSubmitButtonState);
+
         dynamicForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const category = categorySelect.value;
             const formData = {};
-
-            const formFieldsContainer = dynamicForm.querySelector('#formFieldsContainer');
-            if (!formFieldsContainer) {
-                alert('Form alanı bulunamadı.');
-                return;
-            }
 
             const newFields = formFieldsContainer.querySelectorAll('.new-form-field');
             if (newFields.length === 0) {
@@ -326,6 +308,15 @@
             updateServerCategories();
             createCategoryLinks();
         });
+    </script>
+    <script>
+        const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.body.classList.toggle('light-mode', currentTheme === 'light');
+        } else if (userPrefersLight) {
+            document.body.classList.add('light-mode');
+        }
     </script>
 </body>
 

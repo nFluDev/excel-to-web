@@ -1,453 +1,282 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
-
-:root {
-    --primary-color: #121212;
-    --secondary-color: #1E1E1E;
-    --accent-color-1: #749BC2;
-    --accent-color-2: #fff;
-    --text-color: #EEEEEE;
-    --border-color: #57564F;
-    --background-gradient: radial-gradient(circle at center, var(--secondary-color) 0%, var(--primary-color) 100%);
-}
+@import url('general.css');
 
 body {
-    font-family: 'Roboto', sans-serif;
-    background: var(--background-gradient);
-    color: var(--text-color);
-    line-height: 1.6;
-    margin: 0;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%23121212" /><path d="M0 0h100v100H0V0zm20 20h60v60H20V20z" fill="%231e1e1e" fill-opacity="0.3" /></svg>');
-    background-size: 50px 50px;
-    opacity: 0.5;
-    z-index: -1;
-    animation: background-move 60s linear infinite;
-}
-
-@keyframes background-move {
-    from {
-        transform: translate(0, 0);
-    }
-
-    to {
-        transform: translate(100px, 100px);
-    }
+    min-height: 100vh;
+    text-align: center;
 }
 
 h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    text-align: center;
-    color: var(--accent-color-1);
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    position: relative;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 10px rgba(0, 173, 181, 0.7);
-}
-
-h1::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 2px;
-    background: linear-gradient(to right, transparent, var(--accent-color-1), transparent);
+    font-size: 3.5em;
+    margin-bottom: 0.1em;
+    color: var(--primary-color);
 }
 
 p {
-    text-align: center;
-    font-style: italic;
-    opacity: 0.8;
-    max-width: 600px;
-    margin-bottom: 2rem;
-}
-
-/* Kategori Linkleri */
-#categoryLinks {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-#categoryLinks a {
-    text-decoration: none;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.3em;
     color: var(--text-color);
-    background-color: var(--secondary-color);
-    border: 1px solid var(--border-color);
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+    max-width: 700px;
+    margin-bottom: 2em;
 }
 
-#categoryLinks a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, var(--accent-color-1), transparent);
-    transition: all 0.5s ease;
-    z-index: -1;
-}
-
-#categoryLinks a:hover::before {
-    left: 100%;
-}
-
-#categoryLinks a:hover {
-    color: var(--accent-color-2);
-    border-color: var(--accent-color-1);
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Form */
+/* Ana sayfadaki forma özel stil */
 #uploadForm {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 3rem;
-    padding: 2.5rem;
-    background: var(--secondary-color);
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    gap: 25px;
     width: 100%;
-    max-width: 500px;
+    max-width: 650px;
+    padding: 50px;
+    background-color: var(--card-background);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.4s;
+    border-top: 5px solid var(--secondary-color);
 }
 
 label {
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--accent-color-1);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    text-align: left;
+    color: var(--text-color);
+    font-size: 1.1em;
 }
 
-select,
-input[type="file"],
-#uploadForm button,
-#dynamicForm input[type="text"],
-.add-new-field-button {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: var(--primary-color);
-    border: 1px solid var(--border-color);
+/* Yenilenen Input ve Select Elementleri */
+input[type="text"], input[type="file"], select {
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    background-color: var(--background-color);
     color: var(--text-color);
-    border-radius: 5px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
+    font-size: 1em;
+    font-family: 'Lato', sans-serif;
     transition: all 0.3s ease;
-}
-
-select:focus,
-input[type="file"]:focus,
-#dynamicForm input[type="text"]:focus {
-    outline: none;
-    border-color: var(--accent-color-1);
-    box-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
-}
-
-select option {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-}
-
-/* Dosya girişi ve kaldırma butonu için yeni stil */
-.file-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-input[type="file"] {
-    width: 100%;
-    padding-right: 40px; /* Buton için yer aç */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
     box-sizing: border-box;
 }
 
-input[type="file"]::-webkit-file-upload-button {
-    background: var(--accent-color-2);
-    color: var(--primary-color);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    transition: background-color 0.3s ease;
+input[type="text"]:focus, input[type="file"]:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--card-background);
+    box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.2);
 }
 
-input[type="file"]::-webkit-file-upload-button:hover {
-    background-color: var(--accent-color-1);
+/* Select için özel ok görünümü */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2320c997' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592c.859 0 1.319 1.013.753 1.658l-4.796 5.482a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1em center;
+    background-size: 12px;
+    padding-right: 2.5em;
 }
 
-/* Ortak stil (remove-field-button ve clear-file-button için) */
-.remove-field-button,
-.clear-file-button {
-    background: #FF5252;
+button {
+    background: var(--primary-color);
     color: white;
-    border: none;
-    padding: 0.6rem;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    min-width: 40px;
-}
-
-.remove-field-button:hover,
-.clear-file-button:hover {
-    background-color: #e53935;
-}
-
-/* clear-file-button için özel stil */
-.clear-file-button {
-    position: absolute;
-    right: 5px;
-    max-width: 50px;
-}
-
-/* Buton */
-#uploadForm button[type="submit"],
-#uploadForm button[type="button"],
-#dynamicForm button[type="submit"] {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(90deg, var(--accent-color-2), var(--accent-color-1));
-    color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
     font-weight: 700;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-transform: uppercase;
+    padding: 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    width: 15rem;
+    display: block; /* Butonu blok seviyesine getirir */
+    margin: 0 auto; /* Otomatik kenar boşlukları ile ortalar */
 }
 
-#uploadForm button[type="submit"]:hover,
-#uploadForm button[type="button"]:hover,
-#dynamicForm button[type="submit"]:hover:not(:disabled) {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    background: linear-gradient(90deg, var(--accent-color-1), var(--accent-color-2));
+button:hover:not(:disabled) {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-#uploadForm button:disabled,
-#dynamicForm button:disabled {
-    background: #57564F;
+button:disabled {
+    background: var(--border-color);
+    color: var(--text-color);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
-    color: #a0a0a0;
 }
 
-/* Yükleniyor Durumu */
 #loading {
     display: none;
-    text-align: center;
-    font-size: 1.2rem;
-    font-style: italic;
-    margin-top: 2rem;
-    color: var(--accent-color-1);
-    opacity: 0.7;
-    animation: fade-glow 1.5s infinite alternate;
+    margin-top: 30px;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.5em;
+    animation: pulse 1.5s infinite;
 }
 
-@keyframes fade-glow {
-    from {
-        opacity: 0.5;
-        text-shadow: none;
-    }
-
-    to {
-        opacity: 1;
-        text-shadow: 0 0 5px var(--accent-color-1);
-    }
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-/* Modal */
+/* Modal stili */
 .modal {
     display: none;
     position: fixed;
-    z-index: 100;
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
-    justify-content: center;
+    -webkit-backdrop-filter: blur(5px);
     align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .modal-content {
-    background-color: var(--secondary-color);
-    margin: auto;
-    padding: 2.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 16px;
+    border: 2px solid var(--border-color); /* Kalınlık artırıldı */
+    box-shadow: var(--box-shadow);
     width: 90%;
     max-width: 600px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
     position: relative;
-    animation: zoom-in 0.3s ease-out;
+    animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    border-top: 5px solid var(--secondary-color); /* Yeni border-top eklendi */
 }
 
-@keyframes zoom-in {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .close-button {
     color: var(--text-color);
     position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
+    top: 15px;
+    right: 25px;
+    font-size: 2em;
     font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: var(--accent-color-1);
-    text-decoration: none;
     cursor: pointer;
+    transition: color 0.3s;
 }
 
-#modal-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    text-align: center;
-    color: var(--accent-color-1);
-    margin-bottom: 2rem;
+.close-button:hover, .close-button:focus {
+    color: var(--primary-color);
 }
 
 #dynamicForm {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 20px;
+    height: 100%;
 }
 
-#formFieldsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.form-fields-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-bottom: 20px;
 }
 
-/* Yeni eklenen alanlar için stil */
 .new-form-field {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
+    display: flex;
     gap: 10px;
     align-items: center;
+    margin-bottom: 10px;
 }
 
-.new-form-field input[name="newHeader"],
-.new-form-field input[name="newValue"] {
-    width: 100%;
-    box-sizing: border-box;
+.new-form-field input {
+    flex-grow: 1;
+    min-width: 0;
 }
 
 .add-new-field-button {
+    background-color: #28a745;
+}
+
+.add-new-field-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.remove-field-button {
+    background-color: #dc3545;
+    padding: 10px;
+    text-transform: none;
     width: auto;
-    padding: 0.8rem 1.5rem;
-    background: var(--accent-color-1);
+}
+
+.remove-field-button:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+/* Kategori linkleri stili */
+#categoryLinks {
+    margin-top: 40px;
+    bottom: 125px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+#categoryLinks a {
+    background: var(--card-background);
     color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s;
+    margin-bottom:25px
+}
+
+#categoryLinks a:hover {
+    background: linear-gradient(45deg, var(--primary-color), #20c997);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px) scale(1.05);
+}
+
+.file-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-input-container input[type="file"] {
+    flex-grow: 1;
+}
+
+.clear-file-button {
+    background-color: var(--secondary-color);
+    color: white;
     border: none;
-    border-radius: 5px;
-    font-weight: 700;
-    cursor: pointer;
-    align-self: center;
-}
-
-.add-new-field-button:hover {
-    background: var(--accent-color-2);
-}
-
-/* Küçük Ekranlar için Responsive Tasarım */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 2rem;
-    }
-
-    #uploadForm {
-        padding: 1.5rem;
-        gap: 1rem;
-    }
-
-    #categoryLinks {
-        gap: 0.7rem;
-    }
-
-    #categoryLinks a {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    #uploadForm button[type="submit"],
-    #uploadForm button[type="button"] {
-        font-size: 1rem;
-    }
-
-    .modal-content {
-        padding: 1.5rem;
-    }
-
-    #modal-title {
-        font-size: 1.5rem;
-    }
-
-    .new-form-field {
-        grid-template-columns: 1fr 1fr;
-        gap: 5px;
-    }
-
-    .remove-field-button, .clear-file-button {
-        padding: 0.4rem;
-        font-size: 0.8rem;
-    }
+    font-size: 1.5em;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

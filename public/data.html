@@ -103,6 +103,15 @@
 
         window.addEventListener('load', fetchAndRenderData);
     </script>
+    <script>
+        const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.body.classList.toggle('light-mode', currentTheme === 'light');
+        } else if (userPrefersLight) {
+            document.body.classList.add('light-mode');
+        }
+    </script>
 </body>
 
 </html>
